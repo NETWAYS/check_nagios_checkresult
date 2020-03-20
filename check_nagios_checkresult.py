@@ -101,13 +101,16 @@ def main():
     else:
         opener = urllib2.build_opener(https_handler)
 
-    nagios_type = 'service' if args.service else 'host'
-    uri = '%s/statusjson.cgi?query=%s&hostname=%s&servicedescription=%s' % (
+    nagios_type = 'host'
+    uri = '%s/statusjson.cgi?query=%s&hostname=%s' % (
         args.cgi,
         nagios_type,
-        urllib2.quote(args.host),
-        urllib2.quote(args.service)
+        urllib2.quote(args.host)
     )
+
+    if args.service:
+        nagios_type = 'service'
+        uri += '&servicedescription=%s' % urllib2.quote(args.service)
 
     request = urllib2.Request(uri, headers={'Accept': 'application/json'})
     try:
