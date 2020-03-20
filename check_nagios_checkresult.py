@@ -78,6 +78,13 @@ def parse_arguments(argv=None):
     return parser.parse_args(argv)
 
 
+def quote(text):
+    """
+    Safe quoting for nagios, escaping spaces with +
+    """
+    return urllib2.quote(text, '/ ').replace(' ', '+')
+
+
 def main():
     try:
         args = parse_arguments()
@@ -102,15 +109,17 @@ def main():
         opener = urllib2.build_opener(https_handler)
 
     nagios_type = 'host'
-    uri = '%s/statusjson.cgi?query=%s&hostname=%s' % (
-        args.cgi,
-        nagios_type,
-        urllib2.quote(args.host)
-    )
-
+    uri_extra = ''
     if args.service:
         nagios_type = 'service'
-        uri += '&servicedescription=%s' % urllib2.quote(args.service)
+        uri_extra += '&servicedescription=%s' % quote(args.service)
+
+    uri = '%s/statusjson.cgi?query=%s&hostname=%s%s' % (
+        args.cgi,
+        nagios_type,
+        quote(args.host),
+        uri_extra
+    )
 
     request = urllib2.Request(uri, headers={'Accept': 'application/json'})
     try:
