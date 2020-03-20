@@ -85,7 +85,7 @@ def main():
         return nagios_output(UNKNOWN, "Error parsing arguments: %s" % e)
 
     ssl_ctx = ssl.create_default_context()
-    if args.insecure and False:
+    if args.insecure:
         ssl_ctx.check_hostname = False
         ssl_ctx.verify_mode = ssl.CERT_NONE
 
