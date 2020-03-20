@@ -1,0 +1,1 @@
+https://nagios.example.com/nagios/cgi-bin/statusjson.cgi?query=service&hostname=host&servicedescription=service
